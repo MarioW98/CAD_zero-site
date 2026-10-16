@@ -1,62 +1,32 @@
 ---
 title: CAD_0
-description: A from-scratch, dual-representation CAD kernel.
+description: A from-scratch, dual-representation CAD kernel with native SDF and B-Rep.
 template: splash
 hero:
-  tagline: A from-scratch, dual-representation CAD kernel.
+  title: CAD_0
+  tagline: A from-scratch, dual-representation CAD kernel where SDF and B-Rep are first-class peers.
   actions:
     - text: Get Started
       link: /technical/getting-started/
       icon: right-arrow
       variant: primary
+    - text: Read the Handbook
+      link: /handbook/
+      icon: right-arrow
+      variant: secondary
+    - text: View on GitHub
+      link: https://github.com/MarioW98/CAD_zero
+      icon: external
+      variant: minimal
 ---
 
-:::caution[Project Status]
-**CAD_0 is an early-stage, research-grade CAD kernel.**
-:::
+import { Card, CardGrid, LinkCard, LinkButton } from '@astrojs/starlight/components';
 
-## Benvenuto
-La configurazione di base funziona!
-<!-- ================================================== -->
-<!-- STATUS BANNER -->
-<!-- ================================================== -->
 :::caution[Project Status]
 **CAD_0 is an early-stage, research-grade CAD kernel.** Core geometry, SDF, B-Rep topology, mesh extraction, native project files, Python bindings, and a desktop prototype are available today. Advanced CAD workflows such as a sketcher, full feature history, SDF ↔ B-Rep bridging, and STEP import/export are **planned** roadmap items, not current capabilities.
 :::
 
-<!-- ================================================== -->
-<!-- HERO SECTION -->
-<!-- ================================================== -->
-# CAD_0
-### A from-scratch, dual-representation CAD kernel.
-
-CAD_0 is an open-source geometry kernel where Signed Distance Fields (SDF) and Boundary Representation (B-Rep) are first-class peers. There is no primary representation: operations have native implementations in both domains, and the system dispatches on operand types. Built without third-party CAD kernels, every geometric decision lives in the repository and can be tested deterministically.
-
-**Primary Actions:**
-- [Get Started](/technical/getting-started)
-- [Read the Handbook](/handbook/01-introduction)
-- [View on GitHub](https://github.com/MarioW98/CAD_zero)
-- [Open in Codespaces](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=YOUR_REPO_ID)
-
-<!-- ================================================== -->
-<!-- WHAT IS CAD_0? -->
-<!-- ================================================== -->
 ## What is CAD_0?
-
-graph TD
-    subgraph CAD_0 Ecosystem
-        Kernel[C++20 Core Kernel\nSDF & B-Rep First-Class Peers]
-        Bindings[Python Bindings\nnanobind]
-        App[PySide6 Desktop Prototype]
-        Format[(.CAD_0 v0.2.0\nJSON + Binary Blob)]
-        CI[CI/CD Matrix\nGCC 11, Clang 14, ASan, Xvfb]
-    end
-    
-    App -->|Commands & Queries| Kernel
-    Bindings -->|Exposes API| Kernel
-    Kernel -->|Atomic Save / Transactional Load| Format
-    CI -->|Validates Determinism & Golden Files| Kernel
-    CI -->|Headless UI Tests| App
 
 Most modern CAD systems rely on opaque, heavyweight third-party geometry kernels. CAD_0 is built from the ground up to be an inspectable, educational, and research-grade foundation for computational geometry.
 
@@ -65,31 +35,7 @@ Most modern CAD systems rely on opaque, heavyweight third-party geometry kernels
 - **No Third-Party Kernel:** Every boolean, meshing, and topological validation algorithm is implemented natively in C++20.
 - **Transparent Architecture:** An ADR-first (Architecture Decision Record) culture ensures every major design choice is documented and traceable.
 
-<!-- ================================================== -->
-<!-- CURRENT CAPABILITY MAP -->
-<!-- ================================================== -->
 ## Current Capability Map
-
-graph LR
-    subgraph SDF Domain
-        SDF_Prims[Native Primitives & CSG]
-        SDF_Eval[Batched SIMD Evaluation]
-    end
-    
-    subgraph B-Rep Domain
-        BREP_Topology[Radial-Edge Topology]
-        BREP_Booleans[Convex Polyhedra Booleans]
-    end
-    
-    Mesh[(Triangular Mesh)]
-    
-    SDF_Eval -->|Marching Cubes +\nVertex Welding| Mesh
-    Mesh -.->|Phase E: Bridge| BREP_Topology
-    BREP_Topology -.->|Phase E: Bridge| SDF_Prims
-    
-    classDef available fill:#d1fae5,stroke:#059669,stroke-width:2px;
-    classDef planned fill:#dbeafe,stroke:#2563eb,stroke-width:2px,stroke-dasharray: 5 5;
-    class SDF_Prims,SDF_Eval,BREP_Topology,BREP_Booleans,Mesh available;
 
 | Domain | Capability | Status | Notes |
 | :--- | :--- | :---: | :--- |
@@ -104,61 +50,38 @@ graph LR
 | **Modeling**| Sketcher & Feature History | 🔵 Planned | Phase F of the development roadmap. |
 | **Interop** | STEP AP203 Import/Export | 🔵 Planned | Phase H of the development roadmap. |
 
-<!-- ================================================== -->
-<!-- CHOOSE YOUR PATH -->
-<!-- ================================================== -->
 ## Choose Your Path
 
-Identify your goal and select the appropriate starting point:
+<CardGrid stagger>
+  <Card title="🚀 Try it in Codespaces">
+    Launch a pre-configured environment with noVNC and Xvfb. No install required.
+  </Card>
+  <Card title="🛠️ Build locally">
+    Follow the Build from Source guide (C++20, CMake, Ninja).
+    <LinkButton href="/technical/build-from-source/">Build Guide</LinkButton>
+  </Card>
+  <Card title="🐍 Use from Python">
+    See the Python Quickstart for `nanobind` usage and examples.
+    <LinkButton href="/technical/python-quickstart/">Python Quickstart</LinkButton>
+  </Card>
+  <Card title="📚 Understand the kernel">
+    Start with the Implementation Handbook.
+    <LinkButton href="/handbook/">Handbook</LinkButton>
+  </Card>
+</CardGrid>
 
-- 🚀 **I want to try it without installing anything**  
-  [Launch GitHub Codespaces](#) for a pre-configured environment with noVNC and Xvfb.
-- 🛠️ **I want to build the kernel locally**  
-  Follow the [Build from Source](/technical/build-from-source) guide (C++20, CMake, Ninja).
-- 🐍 **I want to use it from Python**  
-  See the [Python Quickstart](/technical/python-quickstart) for `nanobind` usage and examples.
-- 🖥️ **I want to use the desktop app**  
-  Read the [Desktop App Guide](/technical/desktop-app-guide) to understand the current UI prototype.
-- 📚 **I want to understand how a CAD kernel works**  
-  Start with the [Implementation Handbook](/handbook/).
-- 🤝 **I want to contribute**  
-  Review our [Contributing Guidelines](/technical/contributing) and ADR-first culture.
-
-<!-- ================================================== -->
-<!-- FIRST EXPERIMENT -->
-<!-- ================================================== -->
 ## Your First Experiment
 
 Verify the kernel in under 5 minutes. This ritual extracts a mesh from a simple SDF primitive.
 
-1. **Clone and configure:**
-   ```bash
-   git clone https://github.com/MarioW98/CAD_zero.git
-   cd CAD_zero
-   pip install cmake ninja nanobind scikit-build-core
-   ```
-2. **Build with Python bindings:**
-   ```bash
-   cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCAD_0_BUILD_PYTHON=ON -DCAD_0_BUILD_TESTING=ON
-   cmake --build build
-   ```
-3. **Run a smoke test:**
-   ```bash
-   cd build/python
-   python3 -c "
-   import sys; sys.path.insert(0, '.')
-   import CAD_0
-   sph = CAD_0.sdf.sphere(radius=2.0)
-   print(sph.describe())
-   mesh = CAD_0.sdf.marching_cubes(sph, resolution=16)
-   print(f'Vertices: {mesh.vertex_count()}, Triangles: {mesh.triangle_count()}')
-   "
-   ```
-   *Expected output:* A description of the sphere and a mesh with ~480 vertices and ~960 triangles.
+```bash
+git clone https://github.com/MarioW98/CAD_zero.git
+cd CAD_zero
+pip install cmake ninja nanobind scikit-build-core
+cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCAD_0_BUILD_PYTHON=ON
+cmake --build build
+```
 
-<!-- ================================================== -->
-<!-- ROADMAP SUMMARY -->
-<!-- ================================================== -->
 ## Development Roadmap
 
 - ✅ **Phase A:** Core math, geometry, tolerance model.
@@ -170,25 +93,29 @@ Verify the kernel in under 5 minutes. This ritual extracts a mesh from a simple 
 - 🔜 **Phase F:** Modeling, feature history, sketcher.
 - 🔜 **Phase H:** STEP AP203 MVP.
 
-<!-- ================================================== -->
-<!-- FOOTER TEASERS -->
-<!-- ================================================== -->
 ## Dive Deeper
 
-- **The Handbook:** A textbook-style treatise on dual-representation geometry, robust predicates, and topology validation. [Read the Handbook →](/handbook/)
-- **Technical Docs:** Operational guides for building, testing, and contributing to the codebase. [View Technical Docs →](/technical/)
+<CardGrid>
+  <LinkCard
+    title="Technical Docs"
+    description="Operational guides for building, testing, and contributing to the codebase."
+    href="/technical/getting-started/"
+  />
+</CardGrid>
 ```
 
-#### 3. Rationale
-*   **Decision-Oriented:** The "Choose Your Path" and "First Experiment" sections immediately answer the visitor's implicit question: *"What do I do next?"* within 30 seconds of landing.
-*   **Honest Status Mapping:** The capability map uses the exact status taxonomy (🟢 Available, 🟡 Partial, 🔵 Planned) defined in Step 3, preventing any misinterpretation of the project's maturity.
-*   **Copy-Paste Ready:** The bash/Python code block is directly extracted from the `instr1.md` context, ensuring 100% accuracy and reproducibility.
+Salva il file e aggiorna il browser: dovresti vedere la pagina completamente formattata con le tabelle e le card!
 
-#### 4. Risks / Open Questions
-*   **Links:** The GitHub Codespaces link currently has a placeholder `YOUR_REPO_ID`. This will be updated in Step 10 when we finalize the repository setup.
-*   **Visuals:** This is pure copy/structure. In Step 10, we will wrap this in Starlight components (e.g., converting the table to a grid of cards if desired, or adding the custom amber accent color to the CTAs).
+---
 
-#### 5. Next Step
-If you approve this landing page copy, I will proceed to **Step 5: Capability map and roadmap content**. In that step, I will generate the actual `data/capabilities.yml` and `data/roadmap.yml` files that will programmatically drive the tables and badges on this page, ensuring a single source of truth.
+### Passo B: Preparazione al Deploy su GitHub Pages
+Ora che il sito è perfetto in locale, dobbiamo configurarlo per essere ospitato **gratuitamente su GitHub Pages** (come richiesto dalle istruzioni originali del progetto).
 
-**Please reply with "approve", "revise", or specify any adjustments to the copy.**
+Per farlo, abbiamo bisogno di fare due piccole modifiche ai file di configurazione prima di caricare tutto su GitHub.
+
+**Vuoi che ti fornisca ora:**
+1. Le due righe da aggiungere ad `astro.config.mjs` per far funzionare i link su GitHub Pages.
+2. Il codice esatto per il file `.github/workflows/deploy.yml` (che dirà a GitHub di costruire e pubblicare il sito in automatico ogni volta che fai un push).
+3. I comandi `git` per caricare finalmente tutto il tuo lavoro sulla repository `CAD_zero-site`?
+
+Dimmi **"Sì, procedi col deploy"** e ti guiderò in questi ultimi 3 semplicissimi passaggi per mandare il sito online!

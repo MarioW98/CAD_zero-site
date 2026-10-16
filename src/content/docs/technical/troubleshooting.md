@@ -1,5 +1,4 @@
-**File: `src/content/docs/technical/contributing.md`**
-```markdown
+
 ---
 title: Contributing
 description: Guidelines for contributing code, documentation, or architectural decisions to CAD_0.
