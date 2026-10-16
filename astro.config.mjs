@@ -2,6 +2,8 @@ import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 
 export default defineConfig({
+  site: 'https://mariow98.github.io',
+  base: '/CAD_zero-site', // Fondamentale per GitHub Pages
   integrations: [
     starlight({
       title: 'CAD_0',
