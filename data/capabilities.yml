@@ -1,0 +1,116 @@
+# data/capabilities.yml
+# Source of truth for all feature statuses on the website.
+# Statuses: Available, Partial, Experimental, Internal, Planned, Vision, Research
+
+capabilities:
+  # --- SDF DOMAIN ---
+  - id: sdf_primitives
+    name: "SDF Primitives & CSG"
+    domain: "SDF"
+    status: "Available"
+    phase: "Phase B"
+    description: "Native SDF primitives, smooth blends, transforms, and batched vectorized evaluation via xsimd."
+    source_link: "src/sdf/"
+    
+  - id: sdf_meshing
+    name: "Marching Cubes & Vertex Welding"
+    domain: "SDF"
+    status: "Available"
+    phase: "Phase B"
+    description: "Isocontour extraction with canonical edge keys and topological manifold validation."
+    source_link: "src/sdf/meshing/"
+
+  # --- B-REP DOMAIN ---
+  - id: brep_topology
+    name: "Radial-Edge Topology"
+    domain: "B-Rep"
+    status: "Available"
+    phase: "Phase D"
+    description: "Faces, edges, vertices, coedges, and analytic seam wires for spheres and cylinders."
+    source_link: "src/brep/topology/"
+
+  - id: brep_booleans
+    name: "B-Rep Boolean Operations"
+    domain: "B-Rep"
+    status: "Partial"
+    phase: "Phase D"
+    description: "Convex polyhedra booleans using Sutherland-Hodgman clipping, slab decomposition, IntersectionTable, SharedVertexPool, and T-junction subdivision."
+    source_link: "src/brep/booleans/"
+    limitation: "Currently validated primarily for convex polyhedra. Non-convex support is an active research area."
+
+  - id: brep_validation
+    name: "Topological Validation"
+    domain: "B-Rep"
+    status: "Available"
+    phase: "Phase D"
+    description: "V/E/F counts, Euler characteristic (χ=2) checks, closed loop verification, and is_closed_manifold queries."
+    source_link: "src/brep/validation/"
+
+  # --- CORE & FORMAT ---
+  - id: native_format
+    name: ".CAD_0 Native Format (v0.2.0)"
+    domain: "Core"
+    status: "Available"
+    phase: "Phase C+"
+    description: "JSON feature tree plus binary blob container. Guarantees atomic save, transactional load, and explicit migration chains."
+    source_link: "src/io/"
+
+  - id: determinism
+    name: "Deterministic Geometry Contract"
+    domain: "Core"
+    status: "Available"
+    phase: "Phase A"
+    description: "-ffp-contract=off, bit-identical round-trip tests, and byte-identical golden files to prevent silent evaluation changes."
+    source_link: "tests/"
+
+  # --- APP & BINDINGS ---
+  - id: python_bindings
+    name: "Python Bindings (nanobind)"
+    domain: "Bindings"
+    status: "Available"
+    phase: "Phase C+"
+    description: "Exposes C++ kernel safely to Python. API is currently unstable and subject to change."
+    source_link: "bindings/python/"
+    limitation: "API is not yet stable. Breaking changes may occur without major version bumps."
+
+  - id: desktop_app
+    name: "PySide6 Desktop Prototype"
+    domain: "App"
+    status: "Available"
+    phase: "Phase C"
+    description: "Registry-driven Create menu, feature tree, parametric property panel, undo/redo, viewport picking, and amber 3D highlight."
+    source_link: "src/app/"
+    limitation: "Working prototype, not a finished commercial CAD application."
+
+  # --- PLANNED / VISION ---
+  - id: sdf_brep_bridge
+    name: "SDF ↔ B-Rep Bridge"
+    domain: "Core"
+    status: "Planned"
+    phase: "Phase E"
+    description: "Native, lossless conversion and interoperability between SDF and B-Rep domains."
+    source_link: "docs/roadmap.md"
+
+  - id: sketcher_history
+    name: "Sketcher & Feature History"
+    domain: "App"
+    status: "Planned"
+    phase: "Phase F"
+    description: "Parametric modeling workflow with constraint solving and persistent naming by genealogy."
+    source_link: "docs/roadmap.md"
+
+  - id: step_support
+    name: "STEP AP203 Import/Export"
+    domain: "Interop"
+    status: "Planned"
+    phase: "Phase H"
+    description: "Standardized CAD interoperability MVP."
+    source_link: "docs/roadmap.md"
+
+  - id: gpu_evaluation
+    name: "GPU SDF Evaluation"
+    domain: "SDF"
+    status: "Vision"
+    phase: "Future"
+    description: "Massively parallel SDF evaluation and meshing on the GPU."
+    source_link: "docs/roadmap.md"

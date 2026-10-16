@@ -1,0 +1,71 @@
+# data/roadmap.yml
+# Defines the project timeline and separates committed work from visionary ideas.
+
+roadmap_phases:
+  - phase: "Phase A"
+    title: "Core Math & Foundations"
+    status: "Completed"
+    items: 
+      - "Geometric foundations (vectors, matrices, transforms)"
+      - "Tolerance model and robust predicates"
+      - "Determinism contracts (-ffp-contract=off)"
+
+  - phase: "Phase B"
+    title: "SDF Kernel"
+    status: "Completed"
+    items:
+      - "Native SDF primitives and CSG"
+      - "Marching cubes mesh extraction"
+      - "Vertex welding via canonical edge keys"
+
+  - phase: "Phase C"
+    title: "Viewport & Desktop App"
+    status: "Completed"
+    items:
+      - "PySide6 desktop application prototype"
+      - "Headless-first viewport architecture"
+      - "Feature tree and property panel"
+
+  - phase: "Phase C+"
+    title: "Native Format & Toolchain"
+    status: "Completed"
+    items:
+      - ".CAD_0 v0.2.0 format (atomic save, transactional load)"
+      - "STL/OBJ import with vertex welding"
+      - "CI matrix (GCC 11, Clang 14, ASan, Xvfb UI tests)"
+
+  - phase: "Phase D"
+    title: "B-Rep Topology & Booleans"
+    status: "Completed"
+    items:
+      - "Radial-edge topology implementation"
+      - "Analytic seam wires (sphere, cylinder)"
+      - "Convex polyhedra booleans (slab decomposition, T-junction subdivision)"
+
+  - phase: "Phase E"
+    title: "SDF ↔ B-Rep Bridge"
+    status: "Planned"
+    items:
+      - "Bidirectional conversion algorithms"
+      - "Hybrid modeling workflows"
+
+  - phase: "Phase F"
+    title: "Parametric Modeling"
+    status: "Planned"
+    items:
+      - "2D Sketcher with constraint solving"
+      - "Feature history and persistent naming"
+
+  - phase: "Phase H"
+    title: "Standard Interoperability"
+    status: "Planned"
+    items:
+      - "STEP AP203 Import/Export MVP"
+
+vision_items:
+  - title: "Advanced Assemblies"
+    description: "Multi-part assembly management and interference detection."
+  - title: "GPU Acceleration"
+    description: "Offloading SDF evaluation and marching cubes to compute shaders."
+  - title: "Direct Editing"
+    description: "Push/pull modeling on B-Rep faces without explicit feature history."
