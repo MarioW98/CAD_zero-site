@@ -20,7 +20,7 @@ hero:
       variant: minimal
 ---
 
-import { Card, CardGrid, LinkCard, LinkButton } from '@astrojs/starlight/components';
+
 
 :::caution[Project Status]
 **CAD_0 is an early-stage, research-grade CAD kernel.** Core geometry, SDF, B-Rep topology, mesh extraction, native project files, Python bindings, and a desktop prototype are available today. Advanced CAD workflows such as a sketcher, full feature history, SDF ↔ B-Rep bridging, and STEP import/export are **planned** roadmap items, not current capabilities.
