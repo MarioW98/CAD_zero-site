@@ -1,7 +1,10 @@
 ---
 title: Getting Started
-description: Prerequisites and quick paths to your first successful CAD_0 command.
+description: Prerequisites and quick paths.
 ---
+
+# Getting Started
+Questa è la pagina di test per la sezione Technical Docs.
 
 Welcome to the CAD_0 technical documentation. This guide will help you choose the right path to interact with the kernel based on your goals.
 
