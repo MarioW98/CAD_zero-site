@@ -1,9 +1,22 @@
 ---
 title: CAD_0
-description: A from-scratch, dual-representation CAD kernel with native SDF and B-Rep.
-layout: ../layouts/LandingLayout.astro
+description: A from-scratch, dual-representation CAD kernel.
+template: splash
+hero:
+  tagline: A from-scratch, dual-representation CAD kernel.
+  actions:
+    - text: Get Started
+      link: /technical/getting-started/
+      icon: right-arrow
+      variant: primary
 ---
 
+:::caution[Project Status]
+**CAD_0 is an early-stage, research-grade CAD kernel.**
+:::
+
+## Benvenuto
+La configurazione di base funziona!
 <!-- ================================================== -->
 <!-- STATUS BANNER -->
 <!-- ================================================== -->
