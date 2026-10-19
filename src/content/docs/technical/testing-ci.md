@@ -6,7 +6,7 @@ description: Understanding the CAD_0 testing pyramid and CI matrix.
 Determinism and correctness are non-negotiable in CAD_0. The testing infrastructure is designed to catch regressions before they merge.
 
 ## The Testing Pyramid
-
+```mermaid
 graph BT
     subgraph CI Matrix (ubuntu-22.04)
         direction BT
@@ -20,7 +20,7 @@ graph BT
     
     Toolchain[Toolchain Contract:\nGCC 11 Debug/Release, Clang 14, ASan]
     Toolchain --> CI Matrix
-
+```
 
 1. **Unit Tests**: C++ `doctest` suite covering core math, SDF, and B-Rep operations.
 2. **Regression Tests**: Byte-identical golden files ensure evaluation values never silently change.

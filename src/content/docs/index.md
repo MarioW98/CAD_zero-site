@@ -34,7 +34,7 @@ Most modern CAD systems rely on opaque, heavyweight third-party geometry kernels
 - **Deterministic by Construction:** Strict floating-point contracts, bit-identical round-trip tests, and `-ffp-contract=off` ensure geometry evaluates identically across supported toolchains.
 - **No Third-Party Kernel:** Every boolean, meshing, and topological validation algorithm is implemented natively in C++20.
 - **Transparent Architecture:** An ADR-first (Architecture Decision Record) culture ensures every major design choice is documented and traceable.
-
+```mermaid
 graph TD
     subgraph CAD_0 Ecosystem
         Kernel[C++20 Core Kernel\nSDF & B-Rep First-Class Peers]
@@ -49,7 +49,8 @@ graph TD
     Kernel -->|Atomic Save / Transactional Load| Format
     CI -->|Validates Determinism & Golden Files| Kernel
     CI -->|Headless UI Tests| App
-
+```
+```mermaid
 graph LR
     subgraph SDF Domain
         SDF_Prims[Native Primitives & CSG]
@@ -70,7 +71,7 @@ graph LR
     classDef available fill:#d1fae5,stroke:#059669,stroke-width:2px;
     classDef planned fill:#dbeafe,stroke:#2563eb,stroke-width:2px,stroke-dasharray: 5 5;
     class SDF_Prims,SDF_Eval,BREP_Topology,BREP_Booleans,Mesh available;
-
+```
 ## Current Capability Map
 
 | Domain | Capability | Status | Notes |
