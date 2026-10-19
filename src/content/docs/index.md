@@ -35,6 +35,42 @@ Most modern CAD systems rely on opaque, heavyweight third-party geometry kernels
 - **No Third-Party Kernel:** Every boolean, meshing, and topological validation algorithm is implemented natively in C++20.
 - **Transparent Architecture:** An ADR-first (Architecture Decision Record) culture ensures every major design choice is documented and traceable.
 
+graph TD
+    subgraph CAD_0 Ecosystem
+        Kernel[C++20 Core Kernel\nSDF & B-Rep First-Class Peers]
+        Bindings[Python Bindings\nnanobind]
+        App[PySide6 Desktop Prototype]
+        Format[(.CAD_0 v0.2.0\nJSON + Binary Blob)]
+        CI[CI/CD Matrix\nGCC 11, Clang 14, ASan, Xvfb]
+    end
+    
+    App -->|Commands & Queries| Kernel
+    Bindings -->|Exposes API| Kernel
+    Kernel -->|Atomic Save / Transactional Load| Format
+    CI -->|Validates Determinism & Golden Files| Kernel
+    CI -->|Headless UI Tests| App
+
+graph LR
+    subgraph SDF Domain
+        SDF_Prims[Native Primitives & CSG]
+        SDF_Eval[Batched SIMD Evaluation]
+    end
+    
+    subgraph B-Rep Domain
+        BREP_Topology[Radial-Edge Topology]
+        BREP_Booleans[Convex Polyhedra Booleans]
+    end
+    
+    Mesh[(Triangular Mesh)]
+    
+    SDF_Eval -->|Marching Cubes +\nVertex Welding| Mesh
+    Mesh -.->|Phase E: Bridge| BREP_Topology
+    BREP_Topology -.->|Phase E: Bridge| SDF_Prims
+    
+    classDef available fill:#d1fae5,stroke:#059669,stroke-width:2px;
+    classDef planned fill:#dbeafe,stroke:#2563eb,stroke-width:2px,stroke-dasharray: 5 5;
+    class SDF_Prims,SDF_Eval,BREP_Topology,BREP_Booleans,Mesh available;
+
 ## Current Capability Map
 
 | Domain | Capability | Status | Notes |

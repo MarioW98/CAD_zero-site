@@ -7,6 +7,21 @@ Determinism and correctness are non-negotiable in CAD_0. The testing infrastruct
 
 ## The Testing Pyramid
 
+graph BT
+    subgraph CI Matrix (ubuntu-22.04)
+        direction BT
+        L1[Headless UI Tests\nXvfb + fluxbox]
+        L2[Python Bindings Tests]
+        L3[Regression Tests\nByte-identical Golden Files]
+        L4[Unit Tests\nC++ doctest suite]
+        
+        L4 --> L3 --> L2 --> L1
+    end
+    
+    Toolchain[Toolchain Contract:\nGCC 11 Debug/Release, Clang 14, ASan]
+    Toolchain --> CI Matrix
+
+
 1. **Unit Tests**: C++ `doctest` suite covering core math, SDF, and B-Rep operations.
 2. **Regression Tests**: Byte-identical golden files ensure evaluation values never silently change.
 3. **Python Tests**: Validates the `nanobind` exposure and Python-side logic.
