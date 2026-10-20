@@ -9,6 +9,10 @@ hero:
       link: /technical/getting-started/
       icon: right-arrow
       variant: primary
+    - text: Documentation
+      link: /technical/
+      icon: open-book
+      variant: primary
     - text: Read the Handbook
       link: /handbook/
       icon: right-arrow
