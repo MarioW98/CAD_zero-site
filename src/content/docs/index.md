@@ -24,7 +24,7 @@ hero:
 ---
 :::danger[BEFORE ANY JUDGEMENT]
 ***IN PROGRESS:***
-The concept for this project was the idea of an guy with a passion for mathematics and engineering. In the current era, I believe that the internet has rendered ignorance a matter of choice rather than a condition.
+The concept for this project was the idea of a man with a passion for mathematics and engineering. In the current era, I believe that the internet has rendered ignorance a matter of choice rather than a condition.
 I'm going to work on this by myself for the time being, so that I can understand this argument on my own.
 One of the primary objectives of this project is to facilitate the diffusion of information to a wider audience.
 :::
