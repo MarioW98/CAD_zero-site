@@ -10,15 +10,31 @@ capabilities:
     status: "Available"
     phase: "Phase B"
     description: "Native SDF primitives, smooth blends, transforms, and batched vectorized evaluation via xsimd."
-    source_link: "src/sdf/"
+    source_link: "core/sdf/"
     
   - id: sdf_meshing
     name: "Marching Cubes & Vertex Welding"
     domain: "SDF"
     status: "Available"
     phase: "Phase B"
-    description: "Isocontour extraction with canonical edge keys and topological manifold validation."
-    source_link: "src/sdf/meshing/"
+    description: "MC33 isocontour extraction with canonical edge keys and topological manifold validation."
+    source_link: "core/sdf/"
+
+  - id: sdf_twist_warp
+    name: "Twist Warp Contract"
+    domain: "SDF"
+    status: "Available"
+    phase: "Phase B+"
+    description: "Cylinder-AABB bounds, σ(k, r) Lipschitz closed form, full chain-rule gradient, construction-time validation on 16-node table, property closure with twisted bridge extractions (ADR-0029)."
+    source_link: "core/sdf/"
+
+  - id: sdf_smoothmin_bounds
+    name: "SmoothMinSDF Bounds"
+    domain: "SDF"
+    status: "Available"
+    phase: "Phase B+"
+    description: "Dilates by k/8 per blend level with stratified positivity property closing the thin-shell blind spot (ADR-0028)."
+    source_link: "core/sdf/"
 
   # --- B-REP DOMAIN ---
   - id: brep_topology
@@ -26,16 +42,16 @@ capabilities:
     domain: "B-Rep"
     status: "Available"
     phase: "Phase D"
-    description: "Faces, edges, vertices, coedges, and analytic seam wires for spheres and cylinders."
-    source_link: "src/brep/topology/"
+    description: "Faces, edges, vertices, coedges, and analytic seam wires for spheres and cylinders. Topological contract: is_closed_orientable for structural invariants, χ and genus reported for single closed-orientable shells."
+    source_link: "core/brep/"
 
   - id: brep_booleans
     name: "B-Rep Boolean Operations"
     domain: "B-Rep"
     status: "Partial"
     phase: "Phase D"
-    description: "Convex polyhedra booleans using Sutherland-Hodgman clipping, slab decomposition, IntersectionTable, SharedVertexPool, and T-junction subdivision."
-    source_link: "src/brep/booleans/"
+    description: "Convex polyhedra booleans (union/subtract/intersect) using Sutherland-Hodgman clipping, slab decomposition, IntersectionTable, SharedVertexPool, and T-junction subdivision. Validated against exact topological contracts."
+    source_link: "core/brep/"
     limitation: "Currently validated primarily for convex polyhedra. Non-convex support is an active research area."
 
   - id: brep_validation
@@ -43,17 +59,27 @@ capabilities:
     domain: "B-Rep"
     status: "Available"
     phase: "Phase D"
-    description: "V/E/F counts, Euler characteristic (χ=2) checks, closed loop verification, and is_closed_manifold queries."
-    source_link: "src/brep/validation/"
+    description: "V/E/F counts, closed loop verification, is_closed_manifold (χ=2 compatibility wrapper), and is_closed_orientable queries."
+    source_link: "core/brep/"
+
+  # --- BRIDGE ---
+  - id: sdf_brep_bridge
+    name: "SDF → B-Rep Bridge"
+    domain: "Bridge"
+    status: "Available"
+    phase: "Phase E"
+    description: "Extracts native SDF bodies into B-Rep solids (exact analytic primitives or MC33 faceted) under hard topology contracts. Pinned V/E/F per grid, genus-1 extractions supported (ADR-0026)."
+    source_link: "core/bridge/"
+    limitation: "The inverse direction (B-Rep → SDF) is an approximate, documented stub (primitive detection + mesh SDF), deferred to a future ADR."
 
   # --- CORE & FORMAT ---
   - id: native_format
-    name: ".CAD_0 Native Format (v0.2.0)"
+    name: ".CAD_0 Native Format (v0.3.0)"
     domain: "Core"
     status: "Available"
     phase: "Phase C+"
-    description: "JSON feature tree plus binary blob container. Guarantees atomic save, transactional load, and explicit migration chains."
-    source_link: "src/io/"
+    description: "JSON feature tree + binary blob container. Recipes are the source of truth, bodies the cache. Guarantees atomic save, transactional load, and explicit migration chains (v0.1.0 → v0.2.0 → v0.3.0)."
+    source_link: "core/io/"
 
   - id: determinism
     name: "Deterministic Geometry Contract"
@@ -79,24 +105,25 @@ capabilities:
     status: "Available"
     phase: "Phase C"
     description: "Registry-driven Create menu, feature tree, parametric property panel, undo/redo, viewport picking, and amber 3D highlight."
-    source_link: "src/app/"
+    source_link: "app/"
     limitation: "Working prototype, not a finished commercial CAD application."
 
-  # --- PLANNED / VISION ---
-  - id: sdf_brep_bridge
-    name: "SDF ↔ B-Rep Bridge"
-    domain: "Core"
-    status: "Planned"
-    phase: "Phase E"
-    description: "Native, lossless conversion and interoperability between SDF and B-Rep domains."
-    source_link: "docs/roadmap.md"
+  - id: boolean_tree_features
+    name: "Boolean Tree Features"
+    domain: "App"
+    status: "Partial"
+    phase: "Phase F"
+    description: "Edit → Subtract builds an operation node whose operands stay referenced by FeatureId. Undo/redo is id-stable, deleted operand leaves visible dangling state (ADR-0027)."
+    source_link: "app/"
+    limitation: "Phase F boolean feature slice is in. Sketcher is next."
 
+  # --- PLANNED / VISION ---
   - id: sketcher_history
-    name: "Sketcher & Feature History"
+    name: "Sketcher & Full Feature History"
     domain: "App"
     status: "Planned"
     phase: "Phase F"
-    description: "Parametric modeling workflow with constraint solving and persistent naming by genealogy."
+    description: "2D sketcher with constraint solving and persistent naming by genealogy."
     source_link: "docs/roadmap.md"
 
   - id: step_support
@@ -106,6 +133,14 @@ capabilities:
     phase: "Phase H"
     description: "Standardized CAD interoperability MVP."
     source_link: "docs/roadmap.md"
+
+  - id: brep_to_sdf_stub
+    name: "B-Rep → SDF Inverse Bridge"
+    domain: "Bridge"
+    status: "Partial"
+    phase: "Phase E"
+    description: "Approximate, documented stub (primitive detection + mesh SDF). Full implementation deferred to future ADR."
+    source_link: "core/bridge/"
 
   - id: gpu_evaluation
     name: "GPU SDF Evaluation"

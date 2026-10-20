@@ -17,6 +17,8 @@ roadmap_phases:
       - "Native SDF primitives and CSG"
       - "Marching cubes mesh extraction"
       - "Vertex welding via canonical edge keys"
+      - "Twist warp contract (ADR-0029)"
+      - "SmoothMinSDF bounds (ADR-0028)"
 
   - phase: "Phase C"
     title: "Viewport & Desktop App"
@@ -30,7 +32,7 @@ roadmap_phases:
     title: "Native Format & Toolchain"
     status: "Completed"
     items:
-      - ".CAD_0 v0.2.0 format (atomic save, transactional load)"
+      - ".CAD_0 format (atomic save, transactional load)"
       - "STL/OBJ import with vertex welding"
       - "CI matrix (GCC 11, Clang 14, ASan, Xvfb UI tests)"
 
@@ -41,20 +43,25 @@ roadmap_phases:
       - "Radial-edge topology implementation"
       - "Analytic seam wires (sphere, cylinder)"
       - "Convex polyhedra booleans (slab decomposition, T-junction subdivision)"
+      - "Amended topological contract (is_closed_orientable, χ/genus reported)"
 
   - phase: "Phase E"
-    title: "SDF ↔ B-Rep Bridge"
-    status: "Planned"
+    title: "SDF → B-Rep Bridge"
+    status: "Completed"
     items:
-      - "Bidirectional conversion algorithms"
-      - "Hybrid modeling workflows"
+      - "Native SDF body extraction into B-Rep solids"
+      - "Hard topology contracts (pinned V/E/F per grid)"
+      - "Genus-1 extractions (pierced box: χ=0)"
+      - "Inverse direction (B-Rep → SDF) as documented stub"
 
   - phase: "Phase F"
     title: "Parametric Modeling"
-    status: "Planned"
+    status: "In Progress"
     items:
-      - "2D Sketcher with constraint solving"
-      - "Feature history and persistent naming"
+      - "Boolean feature slice (operation nodes in tree, ADR-0027)"
+      - ".CAD_0 v0.3 operation recipes"
+      - "Id-stable undo/redo with FeatureId references"
+      - "Sketcher (next)"
 
   - phase: "Phase H"
     title: "Standard Interoperability"

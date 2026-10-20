@@ -3,8 +3,7 @@ title: CAD_0
 description: A from-scratch, dual-representation CAD kernel with native SDF and B-Rep.
 template: splash
 hero:
-  title: CAD_0
-  tagline: A from-scratch, dual-representation CAD kernel where SDF and B-Rep are first-class peers.
+  tagline: A from-scratch, dual-representation CAD kernel.
   actions:
     - text: Get Started
       link: /technical/getting-started/
@@ -19,11 +18,15 @@ hero:
       icon: external
       variant: minimal
 ---
-
-
+:::danger[BEFORE ANY JUDGEMENT]
+***IN PROGRESS:***
+The concept for this project was the idea of an guy with a passion for mathematics and engineering. In the current era, I believe that the internet has rendered ignorance a matter of choice rather than a condition.
+I'm going to work on this by myself for the time being, so that I can understand this argument on my own.
+One of the primary objectives of this project is to facilitate the diffusion of information to a wider audience.
+:::
 
 :::caution[Project Status]
-**CAD_0 is an early-stage, research-grade CAD kernel.** Core geometry, SDF, B-Rep topology, mesh extraction, native project files, Python bindings, and a desktop prototype are available today. Advanced CAD workflows such as a sketcher, full feature history, SDF ↔ B-Rep bridging, and STEP import/export are **planned** roadmap items, not current capabilities.
+**CAD_0 is an early-stage, research-grade CAD kernel.** Core geometry, SDF, B-Rep topology, mesh extraction, SDF→B-Rep bridge, native project files, Python bindings, and a desktop prototype with boolean tree features are available today. Advanced CAD workflows such as a full sketcher and STEP import/export are **planned** roadmap items, not current capabilities.
 :::
 
 ## What is CAD_0?
@@ -34,82 +37,68 @@ Most modern CAD systems rely on opaque, heavyweight third-party geometry kernels
 - **Deterministic by Construction:** Strict floating-point contracts, bit-identical round-trip tests, and `-ffp-contract=off` ensure geometry evaluates identically across supported toolchains.
 - **No Third-Party Kernel:** Every boolean, meshing, and topological validation algorithm is implemented natively in C++20.
 - **Transparent Architecture:** An ADR-first (Architecture Decision Record) culture ensures every major design choice is documented and traceable.
-```mermaid
-graph TD
-    subgraph CAD_0 Ecosystem
-        Kernel[C++20 Core Kernel\nSDF & B-Rep First-Class Peers]
-        Bindings[Python Bindings\nnanobind]
-        App[PySide6 Desktop Prototype]
-        Format[(.CAD_0 v0.2.0\nJSON + Binary Blob)]
-        CI[CI/CD Matrix\nGCC 11, Clang 14, ASan, Xvfb]
-    end
-    
-    App -->|Commands & Queries| Kernel
-    Bindings -->|Exposes API| Kernel
-    Kernel -->|Atomic Save / Transactional Load| Format
-    CI -->|Validates Determinism & Golden Files| Kernel
-    CI -->|Headless UI Tests| App
-```
-```mermaid
-graph LR
-    subgraph SDF Domain
-        SDF_Prims[Native Primitives & CSG]
-        SDF_Eval[Batched SIMD Evaluation]
-    end
-    
-    subgraph B-Rep Domain
-        BREP_Topology[Radial-Edge Topology]
-        BREP_Booleans[Convex Polyhedra Booleans]
-    end
-    
-    Mesh[(Triangular Mesh)]
-    
-    SDF_Eval -->|Marching Cubes +\nVertex Welding| Mesh
-    Mesh -.->|Phase E: Bridge| BREP_Topology
-    BREP_Topology -.->|Phase E: Bridge| SDF_Prims
-    
-    classDef available fill:#d1fae5,stroke:#059669,stroke-width:2px;
-    classDef planned fill:#dbeafe,stroke:#2563eb,stroke-width:2px,stroke-dasharray: 5 5;
-    class SDF_Prims,SDF_Eval,BREP_Topology,BREP_Booleans,Mesh available;
-```
+
 ## Current Capability Map
 
 | Domain | Capability | Status | Notes |
 | :--- | :--- | :---: | :--- |
 | **SDF** | Primitives, CSG, Smooth Blends, Transforms | 🟢 Available | Batched vectorized evaluation via `xsimd`. |
-| **SDF** | Marching Cubes & Vertex Welding | 🟢 Available | Canonical edge keys, manifold validation. |
-| **B-Rep** | Radial-Edge Topology & Query Operators | 🟢 Available | Analytic seam wires for sphere/cylinder. |
-| **B-Rep** | Boolean Operations | 🟡 Partial | Currently validated for convex polyhedra (slab decomposition, T-junction subdivision). |
-| **Format** | `.CAD_0` v0.2.0 Native Format | 🟢 Available | JSON feature tree + binary blob. Atomic save, transactional load, explicit migration chain. |
-| **App** | PySide6 Desktop Prototype | 🟢 Available | Registry-driven Create menu, feature tree, viewport picking, undo/redo. |
+| **SDF** | Marching Cubes & Vertex Welding | 🟢 Available | MC33 extraction with canonical edge keys. |
+| **SDF** | Twist Warp Contract | 🟢 Available | Cylinder-AABB bounds, σ(k,r) Lipschitz, chain-rule gradient (ADR-0029). |
+| **B-Rep** | Radial-Edge Topology | 🟢 Available | Analytic seam wires. is_closed_orientable contract. |
+| **B-Rep** | Boolean Operations | 🟡 Partial | Convex polyhedra (union/subtract/intersect). |
+| **Bridge** | SDF → B-Rep Extraction | 🟢 Available | Hard topology contracts, genus-1 support (ADR-0026). |
+| **Bridge** | B-Rep → SDF (Inverse) | 🟡 Partial | Approximate documented stub. Full impl. deferred. |
+| **Format** | `.CAD_0` v0.3.0 Native Format | 🟢 Available | Recipes = source of truth. Atomic save, migration chain. |
+| **App** | PySide6 Desktop Prototype | 🟢 Available | Registry-driven Create menu, feature tree, undo/redo. |
+| **App** | Boolean Tree Features | 🟡 Partial | Edit → Subtract as tree node, id-stable undo (ADR-0027). |
 | **Bindings**| Python API (`nanobind`) | 🟢 Available | Unstable API. Exposes SDF, meshing, and scene operations. |
-| **Bridge** | SDF ↔ B-Rep Conversion | 🔵 Planned | Phase E of the development roadmap. |
-| **Modeling**| Sketcher & Feature History | 🔵 Planned | Phase F of the development roadmap. |
+| **Modeling**| Sketcher | 🔵 Planned | Next step in Phase F. |
 | **Interop** | STEP AP203 Import/Export | 🔵 Planned | Phase H of the development roadmap. |
 
 ## Choose Your Path
 
 <CardGrid stagger>
-  <Card title="🚀 Try it in Codespaces">
+  <Card title="🚀 Try it in Codespaces" icon="puzzle">
     Launch a pre-configured environment with noVNC and Xvfb. No install required.
+    [Launch Codespaces →](#)
   </Card>
-  <Card title="🛠️ Build locally">
+  <Card title="🛠️ Build locally" icon="seti:makefile">
     Follow the Build from Source guide (C++20, CMake, Ninja).
-    <LinkButton href="/technical/build-from-source/">Build Guide</LinkButton>
+    [Build from Source →](/technical/build-from-source/)
   </Card>
-  <Card title="🐍 Use from Python">
+  <Card title="🐍 Use from Python" icon="seti:python">
     See the Python Quickstart for `nanobind` usage and examples.
-    <LinkButton href="/technical/python-quickstart/">Python Quickstart</LinkButton>
+    [Python Quickstart →](/technical/python-quickstart/)
   </Card>
-  <Card title="📚 Understand the kernel">
-    Start with the Implementation Handbook.
-    <LinkButton href="/handbook/">Handbook</LinkButton>
+  <Card title="🖥️ Use the desktop app" icon="seti:app">
+    Read the Desktop App Guide to understand the current UI prototype.
+    [Desktop App Guide →](/technical/desktop-app-guide/)
+  </Card>
+  <Card title="📚 Understand the kernel" icon="open-book">
+    A textbook-style treatise on dual-representation geometry.
+    [Read the Handbook →](/handbook/)
+  </Card>
+  <Card title="🤝 Contribute" icon="seti:github">
+    Review our Contributing Guidelines and ADR-first culture.
+    [Contributing →](/technical/contributing/)
   </Card>
 </CardGrid>
 
+## Development Roadmap
+
+- ✅ **Phase A:** Core math, geometry, tolerance model.
+- ✅ **Phase B:** SDF kernel, marching cubes, vertex welding, twist warp.
+- ✅ **Phase C:** Viewport architecture, PySide6 desktop app.
+- ✅ **Phase C+:** Native format, migrators, import/export, CI matrix.
+- ✅ **Phase D:** Radial-edge B-Rep topology, convex booleans, slab decomposition.
+- ✅ **Phase E:** SDF → B-Rep bridge under hard topology contracts.
+- ▶️ **Phase F:** Boolean tree features (in progress). Sketcher next.
+- 🔜 **Phase H:** STEP AP203 MVP.
+
 ## Your First Experiment
 
-Verify the kernel in under 5 minutes. This ritual extracts a mesh from a simple SDF primitive.
+Verify the kernel in under 5 minutes.
 
 ```bash
 git clone https://github.com/MarioW98/CAD_zero.git
@@ -117,42 +106,29 @@ cd CAD_zero
 pip install cmake ninja nanobind scikit-build-core
 cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCAD_0_BUILD_PYTHON=ON
 cmake --build build
+cd build/python
+python3 -c "
+import sys; sys.path.insert(0, '.')
+import CAD_0
+sph = CAD_0.sdf.sphere(radius=2.0)
+print(sph.describe())
+mesh = CAD_0.sdf.marching_cubes(sph, resolution=16)
+print(f'Vertices: {mesh.vertex_count()}, Triangles: {mesh.triangle_count()}')
+"
 ```
-
-## Development Roadmap
-
-- ✅ **Phase A:** Core math, geometry, tolerance model.
-- ✅ **Phase B:** SDF kernel, marching cubes, vertex welding.
-- ✅ **Phase C:** Viewport architecture, PySide6 desktop app.
-- ✅ **Phase C+:** Native format, migrators, import/export, CI matrix.
-- ✅ **Phase D:** Radial-edge B-Rep topology, convex booleans, slab decomposition.
-- 🔜 **Phase E:** SDF ↔ B-Rep bridge.
-- 🔜 **Phase F:** Modeling, feature history, sketcher.
-- 🔜 **Phase H:** STEP AP203 MVP.
 
 ## Dive Deeper
 
 <CardGrid>
-  <LinkCard
-    title="Technical Docs"
-    description="Operational guides for building, testing, and contributing to the codebase."
-    href="/technical/getting-started/"
-  />
+<LinkCard
+title="The Handbook"
+description="A textbook-style treatise on dual-representation geometry, robust predicates, and topology validation."
+href="/handbook/"
+/>
+<LinkCard
+title="Technical Docs"
+description="Operational guides for building, testing, and contributing to the codebase."
+href="/technical/"
+/>
 </CardGrid>
 ```
-
-Salva il file e aggiorna il browser: dovresti vedere la pagina completamente formattata con le tabelle e le card!
-
----
-
-### Passo B: Preparazione al Deploy su GitHub Pages
-Ora che il sito è perfetto in locale, dobbiamo configurarlo per essere ospitato **gratuitamente su GitHub Pages** (come richiesto dalle istruzioni originali del progetto).
-
-Per farlo, abbiamo bisogno di fare due piccole modifiche ai file di configurazione prima di caricare tutto su GitHub.
-
-**Vuoi che ti fornisca ora:**
-1. Le due righe da aggiungere ad `astro.config.mjs` per far funzionare i link su GitHub Pages.
-2. Il codice esatto per il file `.github/workflows/deploy.yml` (che dirà a GitHub di costruire e pubblicare il sito in automatico ogni volta che fai un push).
-3. I comandi `git` per caricare finalmente tutto il tuo lavoro sulla repository `CAD_zero-site`?
-
-Dimmi **"Sì, procedi col deploy"** e ti guiderò in questi ultimi 3 semplicissimi passaggi per mandare il sito online!
