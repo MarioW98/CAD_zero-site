@@ -26,7 +26,7 @@ Why kernels exist, why CAD_0 has two representations instead of one, and the num
 | Ch. | Chapter | Status |
 | --- | --- | --- |
 | 1 | [Introduction: What Is a CAD Kernel?](foundations/introduction/) — the anatomy of a CAD system, the five duties of a kernel, and why CAD_0 rejects the opaque-kernel tradition | ✍️ |
-| 2 | Why Dual Representation? — SDF and B-Rep as first-class peers, dispatch on operand types, the price and the reward | ⏳ |
+| 2 | [Why Dual Representation?](foundations/why-dual-representation/) — SDF and B-Rep as first-class peers, dispatch on operand types, the price and the reward | ✍️ |
 | 3 | Geometric Foundations — vectors, transforms, bounding boxes, and the floating-point reality of computation | ⏳ |
 | 4 | Robust Predicates — tolerances, orientation and incircle tests, and numerical honesty | ⏳ |
 
