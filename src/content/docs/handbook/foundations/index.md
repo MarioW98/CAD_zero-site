@@ -14,7 +14,7 @@ The order is deliberate, and it mirrors the order in which CAD_0 itself was buil
 | Ch. | Chapter | Status |
 | --- | --- | --- |
 | 1 | [Introduction: What Is a CAD Kernel?](introduction/) | ✍️ drafted |
-| 2 | Why Dual Representation? | ⏳ planned |
+| 2 | [Why Dual Representation?](why-dual-representation/) | ✍️ drafted |
 | 3 | Geometric Foundations | ⏳ planned |
 | 4 | Robust Predicates | ⏳ planned |
 

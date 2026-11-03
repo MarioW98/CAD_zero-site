@@ -1,49 +1,30 @@
-# Starlight Starter Kit: Basics
+# CAD_0 — Project Website
 
-[![Built with Starlight](https://astro.badg.es/v2/built-with-starlight/tiny.svg)](https://starlight.astro.build)
+The documentation and handbook site for [CAD_0](https://github.com/MarioW98/CAD_zero), a from-scratch, dual-representation CAD kernel (native SDF + B-Rep, C++20 + Python).
 
-```
-npm create astro@latest -- --template starlight
-```
+Built with [Astro](https://astro.build) + [Starlight](https://starlight.astro.build); diagrams via [astro-mermaid](https://github.com/HiDeoo/astro-mermaid).
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Structure
 
-## 🚀 Project Structure
+- `src/content/docs/index.mdx` — landing page with the current capability map and roadmap.
+- `src/content/docs/technical/` — operational guides (build, Codespaces, Python, desktop app, testing, contributing, troubleshooting).
+- `src/content/docs/handbook/` — the *Implementation Handbook*, a textbook-style treatise written progressively, chapter by chapter.
+- `data/capabilities.yml` — the feature-status registry the site's claims reconcile against.
+- `data/roadmap.yml` — the phase timeline (committed work vs vision).
 
-Inside of your Astro + Starlight project, you'll see the following folders and files:
+## Commands
 
-```
-.
-├── public/
-├── src/
-│   ├── assets/
-│   ├── content/
-│   │   └── docs/
-│   └── content.config.ts
-├── astro.config.mjs
-├── package.json
-└── tsconfig.json
-```
+| Command | Action |
+| --- | --- |
+| `npm install` | Install dependencies |
+| `npm run dev` | Start the dev server at `localhost:4321` |
+| `npm run build` | Build the production site into `./dist/` |
+| `npm run preview` | Preview the production build locally |
 
-Starlight looks for `.md` or `.mdx` files in the `src/content/docs/` directory. Each file is exposed as a route based on its file name.
+## Deployment
 
-Images can be added to `src/assets/` and embedded in Markdown with a relative link.
+The site deploys to GitHub Pages from the `main` branch with base path `/CAD_zero-site` (see `astro.config.mjs`). Keep internal links relative — absolute links without the base path break on the project site.
 
-Static assets, like favicons, can be placed in the `public/` directory.
+## Keeping the site honest
 
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Check out [Starlight’s docs](https://starlight.astro.build/), read [the Astro documentation](https://docs.astro.build), or jump into the [Astro Discord server](https://astro.build/chat).
+Before publishing, reconcile every status claim against the main repository's register ([docs/status/README.md](https://github.com/MarioW98/CAD_zero/blob/main/docs/status/README.md)) — the landing page's capability map, `data/capabilities.yml` and `data/roadmap.yml` must say what the CI testifies, no more and no less.

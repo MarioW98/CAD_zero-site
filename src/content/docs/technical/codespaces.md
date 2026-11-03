@@ -48,7 +48,4 @@ If the noVNC screen is black:
 Codespaces can be paused and resumed from the GitHub UI. Your build artifacts and Python environment are preserved between sessions.
 :::
 
-See `CODESPACES.md` in the repository for advanced troubleshooting and configuration details.
-```
-
----
+See [docs/CODESPACES.md](https://github.com/MarioW98/CAD_zero/blob/main/docs/CODESPACES.md) in the repository for advanced troubleshooting and configuration details.

@@ -10,7 +10,7 @@ Thank you for your interest in contributing to CAD_0. The project follows strict
 ### 1. ADR-First Culture
 **Every major architectural change must be proposed, reviewed, and recorded as an Architecture Decision Record (ADR) in `docs/adr/` before implementation begins.**
 
-The project currently maintains over 29 ADRs covering topics such as:
+The project currently maintains 39 ADRs (0001–0039) covering topics such as:
 - ADR-0002: SDF as a first-class `std::variant`
 - ADR-0003: No third-party CAD kernels
 - ADR-0005: Persistent naming by genealogy (not geometric signature)
@@ -19,6 +19,8 @@ The project currently maintains over 29 ADRs covering topics such as:
 - ADR-0026: SDF → B-Rep bridge under hard topology contracts
 - ADR-0027: Boolean feature slice (Phase F)
 - ADR-0029: Twist warp contract
+- ADR-0032: G1 — exact primitives with true trimming and exact mass properties
+- ADR-0036: Persistent naming and shape history (the derived name, the descent table, the resolver)
 
 If you want to propose a new primitive, a new topology structure, or a major refactor, draft an ADR first.
 
@@ -42,9 +44,9 @@ If you want to propose a new primitive, a new topology structure, or a major ref
 2. **Branch from `main`** with a descriptive name.
 3. **Make your changes**, ensuring code compiles cleanly with no new warnings.
 4. **Add or update tests** to cover your changes.
-5. **Run the full CI matrix locally** using the pinned preset:
+5. **Run the full CI matrix locally** using the pinned presets:
    ```bash
-   cmake --preset linux-gcc11-ci
+   cmake --preset linux-gcc-release   # or linux-clang, or linux-gcc-debug with ASan
    cmake --build build
    ctest --test-dir build
    ```
@@ -57,8 +59,8 @@ If you want to propose a new primitive, a new topology structure, or a major ref
 
 ## Toolchain Contract
 
-Warning audits and any `-Werror` change must be verified against the CI compilers (GCC 11.4, Clang 14) before push. Reproduce the exact CI environment locally via the `linux-gcc11-ci` preset. See the audits in `docs/audits/`.
+Warning audits and any `-Werror` change must be verified against the CI compilers (GCC 14, Clang 19) before push. The presets pin them (`g++-14` / `clang++-19`), so a preset build **is** the verification. See the audits in `docs/audits/`.
 
 ## License
 
-CAD_0 is licensed under **Apache-2.0**. Vendored Shewchuk robust predicates under `third_party/robust_predicates/` are public domain. The `[ui]` extra pulls in PySide6 (LGPL-3.0) — dynamic import, replaceable, notices required for closed-source derivatives. Full inventory: `docs/audits/2026-10-16-third-party-license-audit.md`.
+CAD_0 is licensed under **Apache-2.0**. The vendored robust predicates under `third_party/robust_predicates/` are the authentic adaptive Shewchuk predicates (public domain, vendored by ADR-0034). The `[ui]` extra pulls in PySide6 (LGPL-3.0) — dynamic import, replaceable, notices required for closed-source derivatives. Full inventory: `docs/audits/2026-10-16-third-party-license-audit.md`.

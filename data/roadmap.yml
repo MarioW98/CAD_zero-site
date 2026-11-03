@@ -1,11 +1,12 @@
 # data/roadmap.yml
 # Defines the project timeline and separates committed work from visionary ideas.
+# Last reconciled with the main repository: 2026-11-04 (docs/status/README.md).
 
 roadmap_phases:
   - phase: "Phase A"
     title: "Core Math & Foundations"
     status: "Completed"
-    items: 
+    items:
       - "Geometric foundations (vectors, matrices, transforms)"
       - "Tolerance model and robust predicates"
       - "Determinism contracts (-ffp-contract=off)"
@@ -34,45 +35,59 @@ roadmap_phases:
     items:
       - ".CAD_0 format (atomic save, transactional load)"
       - "STL/OBJ import with vertex welding"
-      - "CI matrix (GCC 11, Clang 14, ASan, Xvfb UI tests)"
+      - "CI matrix on ubuntu-24.04 (GCC 14 debug with ASan/UBSan + release, Clang 19, Xvfb UI tests, Python 3.10 syntax floor)"
+      - "Toolchain contract (the presets pin g++-14 / clang++-19)"
 
   - phase: "Phase D"
     title: "B-Rep Topology & Booleans"
     status: "Completed"
     items:
-      - "Radial-edge topology implementation"
-      - "Analytic seam wires (sphere, cylinder)"
-      - "Convex polyhedra booleans (slab decomposition, T-junction subdivision)"
+      - "Radial-edge topology implementation (ADR-0021)"
+      - "Query operators and make_tetrahedron (ADR-0022)"
+      - "Analytic seam wires (sphere, cylinder, ADR-0023)"
+      - "Convex polyhedra booleans with input-contract gates (slab decomposition, T-junction subdivision, ADR-0024/0025)"
+      - "The aligned coplanar union sewn by the overlay behind the composite ε_C gate (H2-u5, ADR-0037)"
       - "Amended topological contract (is_closed_orientable, χ/genus reported)"
 
   - phase: "Phase E"
-    title: "SDF → B-Rep Bridge"
+    title: "The Bridge, Both Directions"
     status: "Completed"
     items:
-      - "Native SDF body extraction into B-Rep solids"
-      - "Hard topology contracts (pinned V/E/F per grid)"
-      - "Genus-1 extractions (pierced box: χ=0)"
-      - "Inverse direction (B-Rep → SDF) as documented stub"
+      - "Native SDF body extraction into B-Rep solids under hard topology contracts (ADR-0026)"
+      - "Pinned V/E/F per grid; genus-1 extractions (pierced box: χ=0)"
+      - "Inverse direction (B-Rep → SDF): the sign is the true generalized winding number, watertight-only, evaluated hierarchically over the ε_w-bounded BVH (ADR-0035 D2.4/D2.5)"
+      - "Registered follow-up: a watertight tessellator for the mesh fallback"
 
   - phase: "Phase F"
     title: "Parametric Modeling"
     status: "In Progress"
     items:
-      - "Boolean feature slice (operation nodes in tree, ADR-0027)"
-      - ".CAD_0 v0.3 operation recipes"
-      - "Id-stable undo/redo with FeatureId references"
-      - "Sketcher (next)"
+      - "Boolean feature slice (operation nodes in the tree, ADR-0027)"
+      - "Sketcher MVP: typed 2D profiles by gesture, extrude as a feature, .CAD_0 v0.4 (ADR-0030)"
+      - "Sketch → extrude → subtract chain with live parametric regeneration"
+      - "The constraint solver, deferred with its entry criterion"
+
+  - phase: "Phase G"
+    title: "The Exact B-Rep Kernel"
+    status: "In Progress"
+    items:
+      - "The great fork: road (a), all in house (ADR-0031, accepted)"
+      - "G1 complete: true trimming via p-curves, exact extrude/subtract, exact mass properties, χ = V−E+F−H (ADR-0032)"
+      - "Persistent naming: the derived name, the descent table, the resolver (ADR-0036)"
+      - "G2 unit 1 of 6: the analytic SSI table, queryable from Python (ADR-0033)"
+      - "Units 2–6 follow: the extended booleans (ADR-0038), the rolling-ball fillet (ADR-0039), the degenerates' corpus, the UI, the guide case end-to-end"
+      - "G3 free surfaces declared (ADR-0031)"
 
   - phase: "Phase H"
     title: "Standard Interoperability"
     status: "Planned"
     items:
-      - "STEP AP203 Import/Export MVP"
+      - "STEP AP203 Import/Export MVP (ADR-0010)"
 
 vision_items:
   - title: "Advanced Assemblies"
     description: "Multi-part assembly management and interference detection."
   - title: "GPU Acceleration"
-    description: "Offloading SDF evaluation and marching cubes to compute shaders."
+    description: "Offloading SDF evaluation and marching cubes to compute shaders. Today the batch runs serially; oneTBB is an off-by-default opt-in (ADR-0009)."
   - title: "Direct Editing"
     description: "Push/pull modeling on B-Rep faces without explicit feature history."

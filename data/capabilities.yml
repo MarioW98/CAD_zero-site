@@ -1,6 +1,7 @@
 # data/capabilities.yml
 # Source of truth for all feature statuses on the website.
 # Statuses: Available, Partial, Experimental, Internal, Planned, Vision, Research
+# Last reconciled with the main repository: 2026-11-04 (ADR-0001..0039, Phases A-G).
 
 capabilities:
   # --- SDF DOMAIN ---
@@ -9,15 +10,15 @@ capabilities:
     domain: "SDF"
     status: "Available"
     phase: "Phase B"
-    description: "Native SDF primitives, smooth blends, transforms, and batched vectorized evaluation via xsimd."
+    description: "Native SDF primitives, smooth blends, transforms, and batched vectorized evaluation via xsimd (the batch runs serially; oneTBB is an off-by-default opt-in, ADR-0009)."
     source_link: "core/sdf/"
-    
+
   - id: sdf_meshing
     name: "Marching Cubes & Vertex Welding"
     domain: "SDF"
     status: "Available"
     phase: "Phase B"
-    description: "MC33 isocontour extraction with canonical edge keys and topological manifold validation."
+    description: "MC33 isocontour extraction with canonical edge keys and topological manifold validation (ADR-0015, ADR-0016)."
     source_link: "core/sdf/"
 
   - id: sdf_twist_warp
@@ -42,17 +43,17 @@ capabilities:
     domain: "B-Rep"
     status: "Available"
     phase: "Phase D"
-    description: "Faces, edges, vertices, coedges, and analytic seam wires for spheres and cylinders. Topological contract: is_closed_orientable for structural invariants, χ and genus reported for single closed-orientable shells."
+    description: "Faces, edges, vertices, coedges, and analytic seam wires for spheres and cylinders. Topological contract: is_closed_orientable for structural invariants, χ and genus reported for single closed-orientable shells (ADR-0021/0022/0023)."
     source_link: "core/brep/"
 
   - id: brep_booleans
-    name: "B-Rep Boolean Operations"
+    name: "B-Rep Booleans (Convex Polyhedra)"
     domain: "B-Rep"
-    status: "Partial"
+    status: "Available"
     phase: "Phase D"
-    description: "Convex polyhedra booleans (union/subtract/intersect) using Sutherland-Hodgman clipping, slab decomposition, IntersectionTable, SharedVertexPool, and T-junction subdivision. Validated against exact topological contracts."
+    description: "union/subtract/intersect on convex polyhedra with input-contract gates (invalid inputs refused, invalid results refused, every non-empty result validated against exact topological contracts), slab decomposition, IntersectionTable, SharedVertexPool, T-junction subdivision — and, since H2-u5, the aligned coplanar union sewn by the overlay behind the composite ε_C gate (ADR-0024, ADR-0037)."
     source_link: "core/brep/"
-    limitation: "Currently validated primarily for convex polyhedra. Non-convex support is an active research area."
+    limitation: "Booleans on curved surfaces (the analytic SSI table's pairs) are the G2 programme, units 2–6 (ADR-0033, ADR-0038)."
 
   - id: brep_validation
     name: "Topological Validation"
@@ -62,23 +63,55 @@ capabilities:
     description: "V/E/F counts, closed loop verification, is_closed_manifold (χ=2 compatibility wrapper), and is_closed_orientable queries."
     source_link: "core/brep/"
 
+  - id: exact_brep_g1
+    name: "Exact B-Rep Kernel (G1)"
+    domain: "B-Rep"
+    status: "Available"
+    phase: "Phase G"
+    description: "Exact primitives with true trimming (typed p-curves on every co-edge), the exact extrude (the HybridBody beside its SDF), the exact subtract (the plane∩cylinder SSI), exact mass properties by the divergence theorem with the all_exact honesty flag, and the extended χ = V−E+F−H (ADR-0032)."
+    source_link: "core/brep/"
+
+  - id: persistent_naming
+    name: "Persistent Naming & Shape History"
+    domain: "B-Rep"
+    status: "Available"
+    phase: "Phase G"
+    description: "The derived name beside the address: factory roots named through the role tables, the extrude and the subtract named through the descent table, the resolver's four classes through mutation (ADR-0036)."
+    source_link: "core/brep/"
+
+  - id: ssi_table
+    name: "Analytic SSI Table (G2 unit 1 of 6)"
+    domain: "B-Rep"
+    status: "Available"
+    phase: "Phase G"
+    description: "Four typed surface–surface intersection entries with their classical derivations as goldens, p-curves typed in both domains, degenerates pinned, out-of-table pairs refused actionably (option (i): the table is the wall). Queryable from Python via CAD_0.brep.ssi_query, bit-identical across re-runs (ADR-0033)."
+    source_link: "core/brep/"
+
   # --- BRIDGE ---
   - id: sdf_brep_bridge
     name: "SDF → B-Rep Bridge"
     domain: "Bridge"
     status: "Available"
     phase: "Phase E"
-    description: "Extracts native SDF bodies into B-Rep solids (exact analytic primitives or MC33 faceted) under hard topology contracts. Pinned V/E/F per grid, genus-1 extractions supported (ADR-0026)."
+    description: "Extracts native SDF bodies into B-Rep solids (exact analytic primitives or MC33 faceted) under hard topology contracts. Pinned V/E/F per grid, genus-1 extractions supported, bit-identical re-runs (ADR-0026)."
     source_link: "core/bridge/"
-    limitation: "The inverse direction (B-Rep → SDF) is an approximate, documented stub (primitive detection + mesh SDF), deferred to a future ADR."
+
+  - id: brep_to_sdf_inverse
+    name: "B-Rep → SDF Inverse Bridge"
+    domain: "Bridge"
+    status: "Available"
+    phase: "Phase E (H2-u4)"
+    description: "Exact primitive detection (sphere, box, cylinder) plus the mesh bridge whose inside/outside sign is the true generalized winding number (van Oosterom–Strackee signed solid angles, summed in double), evaluated hierarchically over the deterministic ε_w-bounded AABB tree; open meshes refused by name at load (ADR-0035 D2.4/D2.5)."
+    source_link: "core/bridge/"
+    limitation: "Watertight-only: the fallback refuses its own non-watertight output rather than answer with a wrong sign. A watertight tessellator is the registered follow-up."
 
   # --- CORE & FORMAT ---
   - id: native_format
-    name: ".CAD_0 Native Format (v0.3.0)"
+    name: ".CAD_0 Native Format (v0.4.0)"
     domain: "Core"
     status: "Available"
-    phase: "Phase C+"
-    description: "JSON feature tree + binary blob container. Recipes are the source of truth, bodies the cache. Guarantees atomic save, transactional load, and explicit migration chains (v0.1.0 → v0.2.0 → v0.3.0)."
+    phase: "Phase C+ / F"
+    description: "JSON feature tree + binary blob container. Recipes are the source of truth, bodies the cache. Guarantees atomic save, transactional load, and explicit migration chains (v0.1.0 → v0.2.0 → v0.3.0 → v0.4.0, ADR-0007/0007a)."
     source_link: "core/io/"
 
   - id: determinism
@@ -86,16 +119,16 @@ capabilities:
     domain: "Core"
     status: "Available"
     phase: "Phase A"
-    description: "-ffp-contract=off, bit-identical round-trip tests, and byte-identical golden files to prevent silent evaluation changes."
+    description: "-ffp-contract=off, bit-identical round-trip tests, and byte-identical golden files to prevent silent evaluation changes (ADR-0014)."
     source_link: "tests/"
 
-  # --- APP & BINDINGS ---
+  # --- APP, BINDINGS, CLI ---
   - id: python_bindings
     name: "Python Bindings (nanobind)"
     domain: "Bindings"
     status: "Available"
     phase: "Phase C+"
-    description: "Exposes C++ kernel safely to Python. API is currently unstable and subject to change."
+    description: "Exposes the C++ kernel safely to Python: SDF, meshing, scene, and the B-Rep queries (body_query, mass_properties, ssi_query, bool_union) plus the report. API is currently unstable and subject to change."
     source_link: "bindings/python/"
     limitation: "API is not yet stable. Breaking changes may occur without major version bumps."
 
@@ -104,48 +137,80 @@ capabilities:
     domain: "App"
     status: "Available"
     phase: "Phase C"
-    description: "Registry-driven Create menu, feature tree, parametric property panel, undo/redo, viewport picking, and amber 3D highlight."
+    description: "Registry-driven Create menu, feature tree, parametric property panel, undo/redo, viewport picking with amber 3D highlight, STL/OBJ import, STL/OBJ/3MF export."
     source_link: "app/"
     limitation: "Working prototype, not a finished commercial CAD application."
 
   - id: boolean_tree_features
     name: "Boolean Tree Features"
     domain: "App"
-    status: "Partial"
+    status: "Available"
     phase: "Phase F"
-    description: "Edit → Subtract builds an operation node whose operands stay referenced by FeatureId. Undo/redo is id-stable, deleted operand leaves visible dangling state (ADR-0027)."
+    description: "Edit → Subtract builds an operation node whose operands stay referenced by FeatureId. Undo/redo is id-stable; a deleted operand leaves a visible dangling state with an actionable message (ADR-0027)."
     source_link: "app/"
-    limitation: "Phase F boolean feature slice is in. Sketcher is next."
 
-  # --- PLANNED / VISION ---
-  - id: sketcher_history
-    name: "Sketcher & Full Feature History"
+  - id: sketcher_mvp
+    name: "Sketcher MVP"
+    domain: "App"
+    status: "Available"
+    phase: "Phase F"
+    description: "Create → Sketch (a third node kind; the canvas is a view of the node), gesture-drawn typed entities (segments, circles, arcs — toolbar shortcuts 1–4), Feature → Extrude, Edit → Subtract; edit any parameter and the chain regenerates deterministically, one undo entry per modification (ADR-0030)."
+    source_link: "app/"
+    limitation: "The constraint solver is explicitly deferred with its entry criterion."
+
+  - id: sketcher_solver
+    name: "Sketcher Constraint Solver"
     domain: "App"
     status: "Planned"
     phase: "Phase F"
-    description: "2D sketcher with constraint solving and persistent naming by genealogy."
-    source_link: "docs/roadmap.md"
+    description: "Interactive constraint solving for the sketcher, deferred with a written entry criterion (ADR-0030)."
+    source_link: "docs/adr/0030-sketcher-mvp.md"
+
+  - id: cli
+    name: "CAD_0 Command-Line Tool"
+    domain: "CLI"
+    status: "Available"
+    phase: "Phase C+"
+    description: "The CAD_0 command (typer/rich, the [cli] extra — not a base dependency): info, primitives, eval-sdf, view, slice. Headless SDF script evaluation and export, no Qt involved."
+    source_link: "bindings/python/"
+
+  # --- PLANNED / VISION ---
+  - id: fillet
+    name: "The Fillet (G2 units 2–6)"
+    domain: "Modeling"
+    status: "Planned"
+    phase: "Phase G"
+    description: "The rolling-ball fillet: the contract is drafted (ADR-0039) and its toroidal rows are already registered in the SSI table; the operation itself does not exist yet (ADR-0033)."
+    source_link: "docs/adr/0039-the-fillet.md"
+
+  - id: patterns
+    name: "Patterns (Feature Arrays)"
+    domain: "Modeling"
+    status: "Planned"
+    phase: "Phase G+"
+    description: "Rectangular / circular feature arrays — not started."
+    source_link: "docs/status/README.md"
 
   - id: step_support
     name: "STEP AP203 Import/Export"
     domain: "Interop"
     status: "Planned"
     phase: "Phase H"
-    description: "Standardized CAD interoperability MVP."
-    source_link: "docs/roadmap.md"
+    description: "Standardized CAD interoperability MVP (ADR-0010)."
+    source_link: "docs/adr/0010-step-scope-mvp.md"
 
-  - id: brep_to_sdf_stub
-    name: "B-Rep → SDF Inverse Bridge"
-    domain: "Bridge"
-    status: "Partial"
-    phase: "Phase E"
-    description: "Approximate, documented stub (primitive detection + mesh SDF). Full implementation deferred to future ADR."
-    source_link: "core/bridge/"
+  - id: g3_free_surfaces
+    name: "G3 Free Surfaces"
+    domain: "B-Rep"
+    status: "Planned"
+    phase: "Phase G"
+    description: "Free-form surfaces, declared as the ladder's third rung of the exact-kernel programme (ADR-0031)."
+    source_link: "docs/adr/0031-exact-brep-kernel.md"
 
   - id: gpu_evaluation
     name: "GPU SDF Evaluation"
     domain: "SDF"
     status: "Vision"
     phase: "Future"
-    description: "Massively parallel SDF evaluation and meshing on the GPU."
-    source_link: "docs/roadmap.md"
+    description: "Massively parallel SDF evaluation and meshing on the GPU. Today the batch runs serially; oneTBB is an off-by-default opt-in (ADR-0009)."
+    source_link: "docs/status/README.md"

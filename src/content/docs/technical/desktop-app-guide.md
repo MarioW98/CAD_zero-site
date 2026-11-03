@@ -17,7 +17,7 @@ The **Create** menu is driven by the kernel's builder registry (`core/scene/buil
 ### Boolean Operations as Tree Features (ADR-0027)
 Boolean operations are first-class tree nodes, not one-shot mesh operations:
 1. Select two SDF bodies in the viewport or feature tree.
-2. Choose **Edit → Subtract** (or Union/Intersect).
+2. Choose **Edit → Subtract**.
 3. An operation node of type `CSG` joins the tree.
 4. Operands are referenced by `FeatureId`, auto-hidden in the viewport but still editable in the property panel.
 5. Placement offsets are world-anchored — edits propagate through the DAG bit-identically.
@@ -30,20 +30,34 @@ Undo and redo restore the **same node ids**, so external references (e.g., prope
 Click a shape in the 3D view (SDF or imported mesh) to select it. The tree, the property panel and an **amber 3D highlight** all follow, regardless of selection origin.
 
 ### Debug Menu: Topological Inspector
-The **Debug** menu reports the topological invariants of any selected body:
-- **χ (Euler characteristic)**
+The **Debug** menu reports the invariants and the provenance of any selected body:
+- **χ (Euler characteristic)** — labelled honestly as V−E+F−H
 - **Genus** (derived only for single closed-orientable shells)
 - **Closed-orientable** status (`is_closed_orientable`)
+- **Mass properties** (volume, centroid, inertia) with the **exact/approximated flag** — a faceted body's polyhedral numbers are never disguised as exact
+- **Per-kind provenance** tallies
 
-This is particularly useful for validating SDF → B-Rep extractions (Phase E) and genus-1 shapes like pierced boxes.
+This is useful for validating SDF → B-Rep extractions (Phase E), genus-1 shapes, and the exact-kernel guide case.
+
+## The Parametric Sketcher (ADR-0030)
+
+The canonical CAD use case is a user path through the app:
+
+1. **Create → Sketch** — a third node kind; the canvas is a view of the node.
+2. Pick a tool on the sketch toolbar (**1** select, **2** segment, **3** circle, **4** arc) and draw — a circle is two clicks (centre, then rim), and every gesture writes typed parameters into the sketch node's recipe.
+3. **Feature → Extrude…** turns the closed profile into a solid prism.
+4. **Edit → Subtract** cuts it from a body.
+5. Select the circle — or double-click it — and edit the radius in the property panel: the extrude and the subtract regenerate live, with one undo entry per modification.
+
+`examples/sketch_hole.py` walks the same chain from Python, genus-1 report included.
 
 ## File Operations
 
-- **Open / Save / Save As** (`Ctrl+O`, `Ctrl+S`, `Ctrl+Shift+S`) in the native `.CAD_0` format (v0.3.0):
+- **Open / Save / Save As** (`Ctrl+O`, `Ctrl+S`, `Ctrl+Shift+S`) in the native `.CAD_0` format (v0.4.0):
   - **Atomic save**: Writes `<file>.tmp` then renames. A crash never destroys the previous file.
   - **Transactional load**: The document is fully validated before the scene is touched. Corrupted or newer-version files raise explicit errors.
-  - **Recipes = source of truth**: Boolean operation recipes are canonical; bodies are the cache.
-  - **Migration chain**: v0.1.0 → v0.2.0 → v0.3.0 files open seamlessly.
+  - **Recipes = source of truth**: Operation and sketch recipes are canonical; bodies are the cache.
+  - **Migration chain**: v0.1.0 → v0.2.0 → v0.3.0 → v0.4.0 files open seamlessly through the migrator chain.
   - **Dirty tracking**: Any scene change flags the project; closing prompts to save.
 - **Import**: STL and OBJ files (vertices welded, counts reported).
 - **Export**: STL, OBJ, and 3MF formats. Format auto-detected from extension.
@@ -51,9 +65,9 @@ This is particularly useful for validating SDF → B-Rep extractions (Phase E) a
 ## Known Limits
 
 :::caution[Prototype Status]
-This is a working prototype, not a finished commercial CAD application. The following are **planned** roadmap items:
-- **2D Sketcher** with constraint solving (Phase F, next step after boolean slice)
-- **Full feature history** with persistent naming by genealogy
-- **Assemblies** and **direct editing** (Vision)
-- **STEP AP203** import/export (Phase H)
+This is a working prototype, not a finished commercial CAD application. The following are **planned** roadmap items — said, not hidden:
+- **The fillet** (G2 units 2–6, ADR-0033/ADR-0039) and **patterns** (rectangular/circular arrays)
+- **The sketcher's constraint solver** (explicitly deferred with its entry criterion, ADR-0030)
+- **G3 free surfaces** (declared as the ladder's third rung, ADR-0031)
+- **STEP AP203** import/export (Phase H, ADR-0010)
 :::

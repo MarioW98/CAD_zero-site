@@ -44,14 +44,14 @@ The signed-distance half of the kernel: shapes as fields, operations as algebra,
 
 ### Part III — The Explicit World
 
-The boundary-representation half of the kernel: topology as a data structure, booleans on convex polyhedra, and the bridge that joins the two worlds.
+The boundary-representation half of the kernel: topology as a data structure, booleans on convex polyhedra, and the bridge that joins the two worlds in both directions.
 
 | Ch. | Chapter | Status |
 | --- | --- | --- |
 | 10 | Boundary Representation I: Radial-Edge Topology — the radial-edge entity set, IDs and Euler invariants (ADR-0021) | ⏳ |
 | 11 | Boundary Representation II: Query Operators and Seam Wires — faces_around_edge, opposite_coedge, analytic seams (ADR-0022, ADR-0023) | ⏳ |
 | 12 | Boolean Operations on Convex Polyhedra — slab decomposition, centroid classification, validity contracts (ADR-0024, ADR-0025) | ⏳ |
-| 13 | The Bridge: SDF → B-Rep — extraction under hard topology contracts, pinned V/E/F counts, genus-1 bodies (ADR-0026) | ⏳ |
+| 13 | The Bridge: SDF → B-Rep — extraction under hard topology contracts, pinned V/E/F counts, genus-1 bodies (ADR-0026), and the inverse direction's watertight sign (ADR-0035) | ⏳ |
 
 ### Part IV — Building the Product
 
@@ -68,11 +68,11 @@ Everything that turns a kernel into a system: scene management, persistence, lan
 
 ### Part V — Horizons
 
-Where the kernel goes next: the sketcher, STEP exchange, and the open problems of the inverse bridge.
+Where the kernel goes next: the exact-kernel programme — booleans on the analytic intersection table, the rolling-ball fillet, free surfaces — then STEP exchange, and the sketcher's deferred solver.
 
 | Ch. | Chapter | Status |
 | --- | --- | --- |
-| 20 | Future Work: Sketcher, STEP and the Inverse Bridge — the sketcher MVP (ADR-0030), STEP AP203 scope, and why B-Rep → SDF is genuinely hard | ⏳ |
+| 20 | Future Work: The Exact Kernel, STEP and Open Problems — the G2 programme (booleans on the analytic table, the fillet: ADR-0033, ADR-0038, ADR-0039), G3 free surfaces (ADR-0031), STEP AP203 scope (ADR-0010), and the sketcher's deferred solver (ADR-0030) | ⏳ |
 
 ## How to read this handbook
 

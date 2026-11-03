@@ -6,50 +6,46 @@ description: Understanding the CAD_0 testing pyramid and CI matrix.
 Determinism and correctness are non-negotiable in CAD_0. The testing infrastructure is designed to catch regressions before they merge.
 
 ## The Testing Pyramid
+
 ```mermaid
 graph BT
-    subgraph CI Matrix (ubuntu-22.04)
+    subgraph CIMatrix["CI matrix (ubuntu-24.04)"]
         direction BT
-        L1[Headless UI Tests\nXvfb + fluxbox]
-        L2[Python Bindings Tests]
-        L3[Regression Tests\nByte-identical Golden Files]
-        L4[Unit Tests\nC++ doctest suite]
-        
+        L1["Headless UI tests<br/>Xvfb + fluxbox"]
+        L2["Python bindings tests<br/>a ctest member"]
+        L3["Regression tests<br/>byte-identical golden files"]
+        L4["Unit tests<br/>C++ doctest suite"]
         L4 --> L3 --> L2 --> L1
     end
-    
-    Toolchain[Toolchain Contract:\nGCC 11 Debug/Release, Clang 14, ASan]
-    Toolchain --> CI Matrix
+    Toolchain["Toolchain contract:<br/>GCC 14 debug (ASan/UBSan) + release,<br/>Clang 19, Python 3.10 syntax floor"]
+    Toolchain --> CIMatrix
 ```
 
-1. **Unit Tests**: C++ `doctest` suite covering core math, SDF, and B-Rep operations.
-2. **Regression Tests**: Byte-identical golden files ensure evaluation values never silently change.
-3. **Python Tests**: Validates the `nanobind` exposure and Python-side logic.
-4. **Headless UI Tests**: PySide6 viewport and UI interactions tested under Xvfb.
+1. **Unit tests**: C++ `doctest` suite covering core math, SDF, and B-Rep operations.
+2. **Regression tests**: byte-identical golden files ensure evaluation values never silently change.
+3. **Python bindings tests**: validate the `nanobind` exposure and Python-side logic; the bindings suite runs as a ctest member — under the preloaded sanitizers in the debug job.
+4. **Headless UI tests**: the PySide6 UI suite runs offscreen under Xvfb — including the GL viewport, picking and navigation.
 
 ## Running Tests Locally
 
 After building with `-DCAD_0_BUILD_TESTING=ON`:
 
 ```bash
-# Run all C++ tests
+# Run the whole suite: C++ unit tests, bindings, goldens
 ctest --test-dir build
-
-# Run Python tests (from the build directory)
-cd build/python
-pytest # or the specific test runner configured in the repo
 ```
 
 ## CI Matrix
 
-The GitHub Actions CI enforces the following matrix on `ubuntu-22.04`:
-- GCC 11 (Debug with AddressSanitizer)
-- GCC 11 (Release)
-- Clang 14 (Release)
+Every push to `main` runs the full matrix on `ubuntu-24.04`:
+
+- **GCC 14 debug** with ASan/UBSan — the C++ suite *and* the Python bindings under the preloaded sanitizer;
+- **GCC 14 release**;
+- **Clang 19**;
+- a dedicated job byte-compiles the tree under **Python 3.10** (the syntax floor), plus a subject lint.
+
+`fail-fast` is off: one red job never hides the others.
 
 :::tip[Toolchain Contract]
-Fixes must not silently change evaluation values. All PRs are checked against golden files. If a legitimate algorithmic improvement changes output, the golden files must be explicitly updated with justification.
+Fixes must not silently change evaluation values. All changes are checked against golden files. If a legitimate algorithmic improvement changes output, the golden files must be explicitly updated with justification. Warning audits and any `-Werror` change must be verified against the CI compilers (GCC 14, Clang 19) before push — the presets pin them (`g++-14` / `clang++-19`), so a preset build is the verification.
 :::
-```
-
----
